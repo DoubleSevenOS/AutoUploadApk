@@ -1,6 +1,3 @@
-//plugins {
-//    id 'com.android.library'
-//}
 apply plugin: 'java-library'
 apply plugin: 'groovy'
 apply plugin: 'com.github.dcendents.android-maven'
@@ -11,69 +8,32 @@ dependencies {
 }
 
 
-//上传使用参数
-def groupName = 'com.yyhu.plugin'//组名
-def artifactName = 'AutoPlugin'//项目名
-def versionName = '1.1.2'//版本号
-apply plugin: 'maven-publish'
-publishing{
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId "${groupName}"
-            artifactId "${artifactName}"
-            version "${versionName}"
-        }
-    }
-
-    repositories{
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url "/Users/sm2273/work/SunmiWork/myrepo"
-        }
-    }
-}
-
-repositories{
-    maven {
-        // change to point to your repo, e.g. http://my.org/repo
-        url "/Users/sm2273/work/SunmiWork/myrepo"
-    }
-}
-
-
-
-//
-//android {
-//    compileSdkVersion 31
-//    buildToolsVersion "31.0.0"
-//
-//    defaultConfig {
-//        minSdkVersion 16
-//        targetSdkVersion 31
-//        versionCode 1
-//        versionName "1.0"
-//
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles "consumer-rules.pro"
-//    }
-//
-//    buildTypes {
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//发布到本地仓库，tasks-publishing-publish
+////上传使用参数
+//def groupName = 'com.yyhu.plugin'//组名
+//def artifactName = 'AutoPlugin'//项目名
+//def versionName = '1.1.2'//版本号
+//apply plugin: 'maven-publish'
+//publishing{
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            groupId "${groupName}"
+//            artifactId "${artifactName}"
+//            version "${versionName}"
 //        }
 //    }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
+//    repositories{
+//        maven {
+//            // change to point to your repo, e.g. /Users/hyy/work/myrepo
+//            url "本地仓库地址"
+//        }
 //    }
 //}
-
-//dependencies {
-//    implementation 'androidx.appcompat:appcompat:1.2.0'
-//    implementation 'com.google.android.material:material:1.2.1'
-//    testImplementation 'junit:junit:4.+'
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//
+//repositories{
+//    maven {
+//        // change to point to your repo, e.g. /Users/hyy/work/myrepo
+//        url "本地仓库地址"
+//    }
 //}
