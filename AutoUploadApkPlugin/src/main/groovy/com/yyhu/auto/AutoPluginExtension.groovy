@@ -4,12 +4,17 @@ class AutoPluginExtension {
     String filePath
     //蒲公英，apiKey
     String apiKey
-    //钉钉webHook
     String webHook
-    String verionName
+    String appName
+    String appVersion
+    String appCode
+    //0,钉钉，1微信
+    String msgType
+    String author
+    String qrImgUrl
 
     @Override
     String toString() {
-        return "filePath:" + filePath+",apiKey:" + apiKe+",verionName:" + verionName+",webHook:" + webHook
+        return "filePath:" + filePath + ",apiKey:" + apiKe + ",verionName:" + verionName + ",webHook:" + webHook
     }
 }

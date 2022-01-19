@@ -1,5 +1,6 @@
 apply plugin: 'java-library'
 apply plugin: 'groovy'
+//上传GIT 发布到jitpack
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.DoubleSevenOS'
 dependencies {
@@ -7,9 +8,9 @@ dependencies {
     implementation localGroovy()//groovy sdk
 }
 
-
+//===================================================
 //发布到本地仓库，tasks-publishing-publish
-////上传使用参数
+//上传使用参数
 //def groupName = 'com.yyhu.plugin'//组名
 //def artifactName = 'AutoPlugin'//项目名
 //def versionName = '1.1.2'//版本号
@@ -25,15 +26,15 @@ dependencies {
 //    }
 //    repositories{
 //        maven {
-//            // change to point to your repo, e.g. /Users/hyy/work/myrepo
-//            url "本地仓库地址"
+//            // change to point to your repo, e.g. ../../myrepo
+//            url "../../myrepo"
 //        }
 //    }
 //}
 //
 //repositories{
 //    maven {
-//        // change to point to your repo, e.g. /Users/hyy/work/myrepo
-//        url "本地仓库地址"
+//        // change to point to your repo, e.g. ../../myrepo
+//        url "../../myrepo"
 //    }
 //}

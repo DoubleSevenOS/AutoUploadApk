@@ -1,12 +1,20 @@
 package com.yyhu.auto
 
+
 import groovy.json.JsonSlurper
+import groovy.json.StringEscapeUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class AutoBuild implements Plugin<Project> {
 
-    String versionName = "1.1.1";
+    String appVersion = ""
+    String appCode = ""
+    //0,钉钉，1微信
+    String msgType = "1"
+    String appName = "";
+    String author = "DoubleSeven";
+    String qrImgUrl = "";
 
     @Override
     void apply(Project project) {
@@ -17,11 +25,21 @@ class AutoBuild implements Plugin<Project> {
             dependsOn("assembleRelease")
             // 设置greeting参数
             doLast {
-                versionName = project.para.verionName
+                author = project.para.author
+                msgType = project.para.msgType
+                appVersion = project.para.appVersion
+                appCode = project.para.appCode
+                appName = project.para.appName
+                qrImgUrl = project.para.qrImgUrl
                 println "********************************************************************************"
                 println "***apiKey  :${project.para.apiKey}"
                 println "***webHook :${project.para.webHook}"
-                println "***versionName :${versionName}"
+                println "****author :${author}"
+                println "***msgType :${msgType}"
+                println "appVersion :${appVersion}"
+                println "***appCode :${appCode}"
+                println "***appName :${appName}"
+                println "**qrImgUrl :${qrImgUrl}"
                 println "********************************************************************************"
                 uploadApk(project.para.filePath, project.para.apiKey, "", project.para.webHook);
             }
@@ -129,7 +147,12 @@ class AutoBuild implements Plugin<Project> {
             throw new RuntimeException(resp.message)
         }
         println resp
-        sendMsgToDing(resp.data, webHook)
+        if ("1" == msgType) {
+            sendMsgToWeiXin(resp.data, webHook)
+        } else {
+            sendMsgToDing(resp.data, webHook)
+        }
+
     }
 
     def sendMsgToDing(def data, String webHook) {
@@ -186,6 +209,112 @@ class AutoBuild implements Plugin<Project> {
         println("*************** 钉钉消息已发送 ***************")
 
     }
+
+    def sendMsgToWeiXin(def data, String webHook) {
+        println "*************** 准备发送企业微信消息消息***************"
+        def conn = new URL(webHook).openConnection()
+        conn.setRequestMethod('POST')
+        conn.setRequestProperty("Connection", "Keep-Alive")
+        conn.setRequestProperty("Content-type", "application/json;charset=UTF-8")
+        conn.setRequestProperty("Accept-Charset", "UTF-8")
+        conn.setRequestProperty("contentType", "UTF-8")
+        conn.setConnectTimeout(30000)
+        conn.setReadTimeout(30000)
+        conn.setDoInput(true)
+        conn.setDoOutput(true)
+        def dos = new DataOutputStream(conn.getOutputStream())
+
+        def downloadUrl = "https://www.pgyer.com/" + data.buildShortcutUrl
+        def qrCodeUrl = data.buildQRCodeURL
+
+        def titleName = ""
+
+        if (appName != null && !appName.isEmpty()) {
+            titleName = appName
+        }
+
+        def authorKey = "构建者"
+
+        def qrUrl = qrCodeUrl
+        if (qrImgUrl != null && qrImgUrl != "null" && !qrImgUrl.isEmpty()) {
+            qrUrl = qrImgUrl
+        }
+
+        def json = new groovy.json.JsonBuilder()
+        def cuTime = getCurData()
+        json {
+            msgtype "template_card"
+            template_card {
+                card_type "news_notice"
+                source {
+                    icon_url "https://wework.qpic.cn/wwpic/252813_jOfDHtcISzuodLa_1629280209/0"
+                    desc titleName
+                    desc_color "0"
+                }
+                main_title {
+                    title "欢迎使用 AutoUploadApk"
+                    desc "DoubleSevenOs"
+                }
+                card_image {
+                    url qrUrl
+                    aspect_ratio "1.5"
+                }
+                vertical_content_list([
+                        {
+                            title "Android自动化打包"
+                            desc ""
+                        }
+                ])
+                horizontal_content_list([
+                        {
+                            keyname authorKey
+                            value author
+                        },
+                        {
+                            keyname "VersionName"
+                            value appVersion
+                        },
+                        {
+                            keyname "VersionCode"
+                            value appCode
+                        },
+                        {
+                            keyname "构建时间"
+                            value cuTime
+                        },
+                ])
+                jump_list([
+                        {
+                            type "1"
+                            title "下载链接"
+                            url downloadUrl
+                        }
+                ])
+                card_action {
+                    type "1"
+                    url downloadUrl
+                }
+            }
+        }
+        println(json)
+        def str = StringEscapeUtils.unescapeJava(json.toString()).trim()
+        println(str)
+        dos.write(str.getBytes("utf-8"))
+        def input = new BufferedReader(new InputStreamReader(conn.getInputStream()))
+        String line = ""
+        String result = ""
+        while ((line = input.readLine()) != null) {
+            result += line
+        }
+        dos.flush()
+        dos.close()
+        input.close()
+        conn.connect()
+        println(result)
+        println("*************** 微信消息已发送 ***************")
+
+    }
+
 
     String getCurData() {
         return new Date().format('yyyy-MM-dd hh:mm:ss');
