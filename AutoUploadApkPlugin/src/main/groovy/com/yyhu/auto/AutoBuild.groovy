@@ -173,7 +173,7 @@ class AutoBuild implements Plugin<Project> {
         def _title = "蒲公英机器人"
         def _content = new StringBuffer()
         _content.append("\n\n###Android 测试包构建成功")
-        _content.append("\n\n构建版本:${versionName}")
+        _content.append("\n\n构建版本:${appVersion}")
         _content.append("\n\n下载地址:" + downloadUrl)
         _content.append("\n\n" + qrCodeUrl)
         _content.append("\n\n构建用户:yyHu")
